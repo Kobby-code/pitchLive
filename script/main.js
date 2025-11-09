@@ -146,7 +146,6 @@ function loadPlayerPage(matchId) {
       const match = matches.find(m => m.id == matchId);
       if (!match) return alert('Match not found.');
 
-      // Load main player info
       document.getElementById('matchTitle').textContent = match.title;
       document.getElementById('matchTime').textContent = new Date(match.date).toLocaleString();
 
@@ -203,7 +202,7 @@ function loadPlayerPage(matchId) {
     });
 }
 
-/* ---------------- Fetch & Render All Matches ---------------- */
+/* ---------------- Fetch & Render All Matches with Background Refresh ---------------- */
 async function fetchAllMatches() {
   try {
     const liveRes = await fetch(`${apiBase}/live`);
@@ -225,6 +224,38 @@ async function fetchAllMatches() {
   }
 }
 
+// ---------------- Automatic Background Refresh ----------------
+function startBackgroundRefresh() {
+  setInterval(() => {
+    if (!document.getElementById('player')) {
+      // Homepage: refresh everything
+      fetchAllMatches();
+    } else {
+      // Watch page: refresh sidebar only
+      fetch(`${apiBase}/live`)
+        .then(res => res.json())
+        .then(matches => {
+          const matchId = new URLSearchParams(window.location.search).get('id');
+          const sidebar = document.getElementById('otherMatches');
+          if (!sidebar) return;
+          sidebar.innerHTML = '';
+          const otherLiveFootball = normalizeResponse(matches).filter(m => m.id != matchId && (m.category || '').toLowerCase() === 'football');
+          if (otherLiveFootball.length === 0) sidebar.innerHTML = '<p class="text-muted">No other live football matches.</p>';
+          otherLiveFootball.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'col-12';
+            const imgInfo = getMatchImage(m);
+            const thumbSrc = imgInfo.src;
+            const altText = esc(imgInfo.alt);
+            div.innerHTML = `<div class="card">${thumbSrc ? `<img src="${thumbSrc}" alt="${altText}" class="card-img-top" loading="lazy" onerror="this.onerror=null;this.src='assets/images/logo.png'">` : ''}<div class="card-body p-2"><h6>${esc(m.title)}</h6><small class="text-muted">${m.date ? new Date(m.date).toLocaleTimeString() : ''}</small></div></div>`;
+            div.addEventListener('click', () => { window.location.href = `watch.html?id=${m.id}`; });
+            sidebar.appendChild(div);
+          });
+        });
+    }
+  }, 30000); // refresh every 30 seconds
+}
+
 /* ---------------- Initialize ---------------- */
 fetchAllMatches();
 if (document.getElementById('player')) {
@@ -232,3 +263,5 @@ if (document.getElementById('player')) {
   const matchId = params.get('id');
   if (matchId) loadPlayerPage(matchId);
 }
+
+startBackgroundRefresh();
