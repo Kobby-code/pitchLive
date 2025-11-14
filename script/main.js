@@ -357,6 +357,8 @@ function enableCarouselSwipeFor(container) {
     const walk = (x - startX) * 1.5; // scroll speed
     container.scrollLeft = scrollLeft - walk;
   });
+
+
 }
 
 function enableCarouselSwipeAll() {

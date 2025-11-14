@@ -32,20 +32,28 @@ header h1 {
   margin: 20px 10px 10px;
 }
 
+.sectionFade {
+  background-color: #141a23;
+}
+
+/* Slider container (merged, single definition) */
 .slider-container {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 0 10px 10px;
-  gap: 15px;
+  display: flex;                         /* layout cards horizontally */
+  gap: 15px;                             /* space between cards */
+  overflow-x: auto;                      /* enable horizontal scroll */
+  scroll-behavior: smooth;               /* smooth scrolling */
+  padding: 0 10px 10px;                  /* optional padding */
+  -webkit-overflow-scrolling: touch;     /* smooth touch scrolling on iOS */
+  -ms-overflow-style: none;              /* hide scrollbar for IE/Edge */
+  scrollbar-width: none;                 /* hide scrollbar for Firefox */
 }
 
 .slider-container::-webkit-scrollbar {
-  display: none;
+  display: none;                         /* hide scrollbar for Chrome, Edge, Safari */
 }
 
 .match-card {
-  max-width: 220px;
+  min-width: 220px;
   background-color: #1e242b;
   border-radius: 10px;
   padding: 10px;
@@ -81,6 +89,7 @@ header h1 {
   border-radius: 4px;
   font-weight: bold;
 }
+
 .slider-container.active {
   user-select: none;
   cursor: grabbing;
@@ -90,6 +99,7 @@ header h1 {
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
+
 /* Ensure iframe cannot overflow width */
 iframe {
   max-width: 100%;
@@ -102,34 +112,11 @@ iframe {
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 4px;
+  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;  /* IE/Edge */
 }
 
-/* Hide scrollbar */
-.other-matches-wrapper::-webkit-scrollbar { width: 0; }
-.other-matches-wrapper { scrollbar-width: none; }/* Ensure iframe cannot overflow width */
-iframe {
-  max-width: 100%;
-  display: block;
-}
-
-
-
-/* Hide scrollbar */
-.other-matches-wrapper { scrollbar-width: none; }
-
-/* Hide scrollbar for Chrome, Edge, Safari */
 .other-matches-wrapper::-webkit-scrollbar {
   width: 0px;
   background: transparent;
 }
-
-/* Hide scrollbar for Firefox */
-.other-matches-wrapper {
-  scrollbar-width: none;
-}
-
-/* Hide scrollbar for Internet Explorer/old Edge */
-.other-matches-wrapper {
-  -ms-overflow-style: none;
-}
-
