@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google-adsense-account" content="ca-pub-8567527615694422">
+  <title>PitchLive - Live & Upcoming Football</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+  /* GLOBAL */
+  body {
+    background-color: #05060a;   /* Deep navy (landing page base) */
+    color: #e2e8f0;              /* Soft white/gray text */
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #0a0c12;   /* Slightly brighter than body */
+    border-bottom: 1px solid #1f2937;
+  }
+  header img { height: 40px; cursor: pointer; }
+  header h1 { margin-left: 15px; font-size: 1.5rem; font-weight: bold; color: #ffffff; cursor: pointer; }
+
+  /* TITLES & TEXT */
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 20px 10px 10px;
+    color: #38bdf8;  /* Light neon blue */
+  }
+  .section-description {
+    font-size: 0.9rem;
+    color: #94a3b8; /* soft blue-gray */
+    padding: 0 12px 10px;
+  }
+
+  /* SLIDER */
+  .slider-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0 10px 10px;
+    gap: 15px;
+  }
+  .slider-container::-webkit-scrollbar { display: none; }
+
+  /* MATCH CARDS */
+  .match-card {
+    min-width: 220px;
+    background-color: #0f172a; /* Navy card background */
+    border: 1px solid #1e293b; /* Soft border */
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .match-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.2); /* Glow like landing page */
+  }
+  .match-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  /* LIVE BADGE */
+  .live-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #22c55e;  /* Neon green badge */
+    color: black;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    color: #64748b; /* Gray-blue */
+    padding: 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    background-color: #0a0c12;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 20px 10px;
+    margin-top: 30px;
+    font-size: 0.9rem;
+  }
+  footer a {
+    color: #38bdf8;  /* neon blue links */
+    text-decoration: none;
+    margin: 0 8px;
+  }
+  footer a:hover { text-decoration: underline; }
+
+  /* MODAL */
+  .modal-content {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #1e293b;
+  }
+</style>
+
+</head>
+<body>
+  <header class="sticky-top">
+    <img src="assets/images/logo.png" alt="PitchLive Logo" onclick="window.location.href='index.html'" />
+    <h1 onclick="window.location.href='index.html'">PitchLive</h1>
+  </header>
+
+  <main class="container-fluid mt-3">
+
+    <section class="p-3">
+      <h2 class="fw-bold">Welcome to PitchLive</h2>
+      <p style="color:white;">
+        This platform brings you updated football fixtures, live matches, and daily match information.
+        We organise matches from the biggest leagues including the Premier League, La Liga, Champions League,
+        Serie A, Bundesliga and more. Our goal is to make it easier for football fans to follow their favorite
+        teams, check upcoming fixtures, and find match details in one place.
+      </p>
+    </section>
+
+    <section class="shadow sectionFade p-3 rounded">
+      <div class="section-title"><i class="fas fa-fire"></i> Today's Popular Matches</div>
+      <p class="section-description">
+        These are the most followed games happening today. We highlight top clashes, rival matches,
+        and games that fans around the world are most excited about. The list updates regularly to help you
+        find the biggest football moments of the day.
+      </p>
+      <div id="popularMatches" class="slider-container"><div class="empty-state">Loading…</div></div>
+    </section>
+
+    <section class="p-3 mb-3">
+      <div class="section-title"><i class="fas fa-futbol"></i> Live Matches</div>
+      <p class="section-description">
+        Here you can find football games currently being played. We show live-action matches across major
+        leagues and competitions. This section updates automatically so you never miss ongoing football events.
+      </p>
+      <div id="liveMatches" class="slider-container"><div class="empty-state">Loading…</div></div>
+    </section>
+
+    <section class="shadow p-3 sectionFade rounded">
+      <div class="section-title"><i class="fas fa-clock"></i> Upcoming Matches</div>
+      <p class="section-description">
+        This section shows matches that will kick off soon. You can check schedules, prepare ahead, and
+        stay informed about upcoming fixtures across different leagues. Times and match details refresh
+        throughout the day.
+      </p>
+      <div id="upcomingMatches" class="slider-container"><div class="empty-state">Loading…</div></div>
+    </section>
+
+  </main>
+
+  <!-- UPDATED FOOTER WITH LEGAL LINKS -->
+  <footer>
+    &copy; 2025 PitchLive |
+    <a href="legal/about.html">About</a> |
+    <a href="legal/privacy.html">Privacy</a> |
+    <a href="legal/terms.html">Terms</a> |
+    <a href="legal/disclaimer.html">Disclaimer</a> |
+    <a href="legal/contact.html">Contact</a>
+  </footer>
+
+  <!-- Countdown Modal -->
+  <div class="modal fade" id="countdownModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalMatchTitle"></h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="modalMatchThumbnail" src="assets/images/logo.png" alt="Match Thumbnail" style="width:100%;max-width:360px;height:auto;object-fit:cover;margin-bottom:15px;border-radius:8px;" />
+          <div id="countdownTimer" style="font-size:1.25rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script/main.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8567527615694422"
+     crossorigin="anonymous"></script>
+  <script src="https://cdn.vercel-insights.com/v1/script.js" defer></script>
+
+</body>
+</html>
