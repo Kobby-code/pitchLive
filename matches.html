@@ -12,7 +12,7 @@
   <style>
   /* GLOBAL */
   body {
-    background-color: #05060a;   /* Deep navy (landing page base) */
+    background: linear-gradient(145deg, #0d1117 0%, #1a2a4a 50%, #001f3f 100%);   /* Deep navy (landing page base) */
     color: #e2e8f0;              /* Soft white/gray text */
     font-family: 'Poppins', sans-serif;
   }
@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     padding: 15px 25px;
-    background-color: #0a0c12;   /* Slightly brighter than body */
+    background: linear-gradient(145deg, #0d1117 0%, #1a2a4a 50%, #001f3f 100%);;   /* Slightly brighter than body */
     border-bottom: 1px solid #1f2937;
   }
   header img { height: 40px; cursor: pointer; }
@@ -53,7 +53,7 @@
 
   /* MATCH CARDS */
   .match-card {
-    min-width: 220px;
+    max-width: 220px;
     background-color: #0f172a; /* Navy card background */
     border: 1px solid #1e293b; /* Soft border */
     border-radius: 12px;
@@ -72,19 +72,6 @@
     height: 120px;
     object-fit: cover;
     border-radius: 10px;
-  }
-
-  /* LIVE BADGE */
-  .live-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #22c55e;  /* Neon green badge */
-    color: black;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 800;
   }
 
   /* EMPTY STATE */
@@ -136,14 +123,14 @@
       </p>
     </section>
 
-    <section class="shadow sectionFade p-3 rounded">
+    <section class="shadow sectionFade p-3 container-fluid">
       <div class="section-title"><i class="fas fa-fire"></i> Today's Popular Matches</div>
-      <p class="section-description">
+      <p class="section-description mb-3">
         These are the most followed games happening today. We highlight top clashes, rival matches,
         and games that fans around the world are most excited about. The list updates regularly to help you
         find the biggest football moments of the day.
       </p>
-      <div id="popularMatches" class="slider-container"><div class="empty-state">Loading…</div></div>
+      <div id="popularMatches" class="slider-container p-3"><div class="empty-state">Loading…</div></div>
     </section>
 
     <section class="p-3 mb-3">
@@ -152,7 +139,7 @@
         Here you can find football games currently being played. We show live-action matches across major
         leagues and competitions. This section updates automatically so you never miss ongoing football events.
       </p>
-      <div id="liveMatches" class="slider-container"><div class="empty-state">Loading…</div></div>
+      <div id="liveMatches" class="slider-container p-3"><div class="empty-state">Loading…</div></div>
     </section>
 
     <section class="shadow p-3 sectionFade rounded">
@@ -162,7 +149,7 @@
         stay informed about upcoming fixtures across different leagues. Times and match details refresh
         throughout the day.
       </p>
-      <div id="upcomingMatches" class="slider-container"><div class="empty-state">Loading…</div></div>
+      <div id="upcomingMatches" class="slider-container p-3"><div class="empty-state">Loading…</div></div>
     </section>
 
   </main>
