@@ -1,9 +1,13 @@
 {
   "redirects": [
-    {
-      "source": "/index.html",
-      "destination": "/",
-      "permanent": true
-    }
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/matches.html", "destination": "/matches", "permanent": true },
+    { "source": "/watch.html", "destination": "/watch", "permanent": true },
+
+    { "source": "/legal/about.html", "destination": "/legal/about", "permanent": true },
+    { "source": "/legal/contact.html", "destination": "/legal/contact", "permanent": true },
+    { "source": "/legal/disclaimer.html", "destination": "/legal/disclaimer", "permanent": true },
+    { "source": "/legal/privacy.html", "destination": "/legal/privacy", "permanent": true },
+    { "source": "/legal/terms.html", "destination": "/legal/terms", "permanent": true }
   ]
 }
