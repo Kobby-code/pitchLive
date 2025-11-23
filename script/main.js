@@ -234,29 +234,32 @@ function loadPlayerPage(matchId) {
       btnContainer.innerHTML = '';
 
       // Helper to fetch and load a source (and mark active button)
-      async function fetchAndLoadSource(srcObj, markActive = true) {
-        try {
-          const res = await fetch(`https://streamed.pk/api/stream/${srcObj.source}/${srcObj.id}`);
-          const streams = await res.json();
-          const stream = streams && streams[0] ? streams[0] : null;
-          if (stream && stream.embedUrl) {
-            player.src = stream.embedUrl;
-          } else {
-            // if no embed, show noStream message (but do not remove iframe)
-            const noStreamEl = document.getElementById('noStream');
-            if (noStreamEl) noStreamEl.style.display = 'block';
-          }
+      async function fetchAndLoadSource(srcObj, markActive = true, retry = true) {
+  try {
+    const res = await fetch(`https://streamed.pk/api/stream/${srcObj.source}/${srcObj.id}`);
+    if (!res.ok) throw new Error('Fetch failed');
+    const streams = await res.json();
+    const stream = Array.isArray(streams) && streams.length ? streams[0] : null;
+    if (!stream || !stream.embedUrl) throw new Error('No valid embed URL');
+    
+    player.src = stream.embedUrl;
 
-          // active button visual
-          if (markActive) {
-            document.querySelectorAll('#streamButtons button').forEach(b => {
-              b.classList.toggle('active', b.dataset.sourceName && b.dataset.sourceName.toLowerCase() === String(srcObj.source).toLowerCase());
-            });
-          }
-        } catch (err) {
-          console.error('Error loading source:', err);
-        }
-      }
+    if (markActive) {
+      document.querySelectorAll('#streamButtons button').forEach(b =>
+        b.classList.toggle('active', b.dataset.sourceName?.toLowerCase() === srcObj.source.toLowerCase())
+      );
+    }
+  } catch (err) {
+    console.error('Error loading source:', err);
+    if (retry) return fetchAndLoadSource(srcObj, markActive, false); // retry once
+    const noStreamEl = document.getElementById('noStream');
+    if (noStreamEl) {
+      noStreamEl.style.display = 'block';
+      noStreamEl.textContent = 'Stream not available. Try another source.';
+    }
+  }
+}
+
 
       if (match.sources && match.sources.length > 0) {
         if (match.sources.length === 1) {
@@ -316,31 +319,53 @@ function loadPlayerPage(matchId) {
 /* ---------------- Fetch & Render All Matches ---------------- */
 async function fetchAllMatches() {
   try {
-    const liveRes = await fetch(`${apiBase}/live`);
-    const liveData = normalizeResponse(await liveRes.json());
+    const now = Date.now();
+    const LIVE_MATCH_DURATION = 2 * 60 * 60 * 1000; // 2 hours
+
+    // Fetch live, all football, and popular matches at the same time
+    const [liveRes, allRes, popularRes] = await Promise.all([
+      fetch(`${apiBase}/live`),
+      fetch(`${apiBase}/football`),
+      fetch(`${apiBase}/football/popular`)
+    ]);
+
+    // Normalize and filter live matches (exclude over matches)
+    const liveData = normalizeResponse(await liveRes.json())
+      .filter(m => (m.date || 0) + LIVE_MATCH_DURATION > now);
     const liveIdSet = new Set((liveData || []).map(m => m.id));
 
-    // Render live section (homepage)
-    renderMatches('liveMatches', liveData, { liveIdSet });
-
-    // upcoming (exclude live)
-    const allRes = await fetch(`${apiBase}/football`);
+    // Normalize and filter upcoming matches (exclude live)
     const allData = normalizeResponse(await allRes.json());
     const upcoming = (allData || []).filter(m => !liveIdSet.has(m.id));
-    renderUpcomingMatches('upcomingMatches', upcoming);
 
-    // popular
-    const popularRes = await fetch(`${apiBase}/football/popular`);
+    // Normalize and filter popular matches to only today
     let popularData = normalizeResponse(await popularRes.json()) || [];
-    popularData = popularData.map(m => ({ ...m, isLive: !!(m.isLive || liveIdSet.has(m.id) || (m.status && String(m.status).toLowerCase() === 'live')) }));
+    popularData = popularData
+      .filter(m => {
+        const matchDate = new Date(m.date);
+        const today = new Date();
+        return matchDate.getDate() === today.getDate() &&
+               matchDate.getMonth() === today.getMonth() &&
+               matchDate.getFullYear() === today.getFullYear();
+      })
+      .map(m => ({ 
+        ...m, 
+        isLive: !!(m.isLive || liveIdSet.has(m.id) || (m.status && String(m.status).toLowerCase() === 'live')) 
+      }));
+
+    // Render sections
+    renderMatches('liveMatches', liveData, { liveIdSet });
+    renderUpcomingMatches('upcomingMatches', upcoming);
     renderMatches('popularMatches', popularData, { treatPopularLikeUpcoming: true, liveIdSet });
 
-    // ensure carousels are swipe-enabled after rendering
+    // Enable carousel swipe
     enableCarouselSwipeAll();
   } catch (err) {
     console.error('Fetch error:', err);
   }
 }
+
+
 
 /* ---------------- Update Sidebar Only (for watch page background refresh) ---------------- */
 async function updateWatchSidebarOnly(skipMatchId) {
