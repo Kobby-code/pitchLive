@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pitchlive.vercel.app/sitemap.xml
